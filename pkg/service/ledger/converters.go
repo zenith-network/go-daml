@@ -723,9 +723,14 @@ func structToMap(v interface{}) map[string]interface{} {
 		val = val.Elem()
 	}
 
-	if val.Kind() != reflect.Struct {
-		b, _ := json.Marshal(v)
-		json.Unmarshal(b, &result)
+		if val.Kind() != reflect.Struct {
+		b, err := json.Marshal(v)
+		if err != nil {
+			return result
+		}
+		if err := json.Unmarshal(b, &result); err != nil {
+			return result
+		}
 		return result
 	}
 
